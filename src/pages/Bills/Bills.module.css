@@ -1,0 +1,78 @@
+.generate-bill-component{
+     font-family: "Poppins", sans-serif !important;
+}
+.form-field{     font-family: "Poppins", sans-serif !important;
+     
+     display: flex;
+     flex-direction: column;
+}
+
+label{
+     display: flex;
+}
+form{
+     display: flex;
+     flex-direction: column;
+     gap:20px;
+}
+.form-head{
+     display: flex;
+     gap:10px
+}
+#product-code-bar{
+     display: flex;
+     flex-direction: row;
+}
+.product-bar{
+     display: flex;
+     gap:10px
+}
+#product-code-text-field{
+     width: 100%;
+}
+.button{
+     white-space: nowrap;
+     width:150px
+}
+.quantity{
+     padding: 0
+}
+.form-footer{
+     justify-content: end;
+     display: flex;
+     flex-direction: column;
+     gap:10px
+}
+.footer-fields{
+     display: flex;
+     justify-content: end;
+     /* align-items: center; */
+     height: 73px ;
+     gap:10px;
+}
+.footer-buttons{
+     margin-top: 18px !important;
+     width:140px
+}
+.forms-selects{
+     width: 200px !important;
+     display: flex;
+     /* justify-content: start; */
+}
+.error-mssg{
+     color:red
+}
+.header{
+     display: flex;
+}
+.product-details{
+     font-family: "Poppins", sans-serif !important;
+
+}
+.tableRow{
+     font-family: "Poppins", sans-serif !important;
+}
+.tableCell{
+     font-family: "Poppins", sans-serif !important;
+
+}

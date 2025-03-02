@@ -1,0 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+.header{
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     flex-direction: column;
+}
+.header-left-wrapper{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.addButton{
+  height:56px !important;
+  width: 258px !important;
+}
+.header-right-wrapper{
+    width: 100%;
+     display: flex;
+     align-items: center;
+     justify-content: end;
+     gap:10px;
+     margin-bottom: 20px;
+}
+.search-bar{
+  flex-grow: 1;
+}
+.forms-selects{
+     width: 220px;
+}/* Main container */
+.bills {
+     width: 100%;
+     font-family: "Poppins", sans-serif !important;
+
+   }
+   
+   .tableContainer {
+     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+     border-radius: 8px;
+     overflow: hidden;
+     margin-bottom: 2rem;
+   }
+   
+   /* Table header styling */
+   .tableHeaderCell {
+     font-weight: 600 !important;
+     color: #344767 !important;
+     padding: 016px 0px !important;
+     border-bottom: 2px solid #eaecef !important;
+     font-size: 0.875rem !important;
+     text-transform: uppercase;
+     letter-spacing: 0.5px;
+     font-family: "Poppins", sans-serif !important;
+
+   }
+   
+   /* These widths must match the grid template columns exactly */
+   .tableHeaderCell:nth-child(1) { width: 16.66% !important;
+padding:16px !important }
+   .tableHeaderCell:nth-child(2) { width: 16.66% !important; }
+   .tableHeaderCell:nth-child(3) { width: 16.66% !important; }
+   .tableHeaderCell:nth-child(4) { width: 16.66% !important; }
+   .tableHeaderCell:nth-child(5) { width: 16.66% !important; }
+   .tableHeaderCell:nth-child(6) { width: 16.7% !important; } /* Slightly larger to prevent overflow */
+   
+   /* Accordion cell styling */
+   .accordionTableCell {
+     font-family: "Poppins", sans-serif !important;
+     padding: 0px !important;
+     border-bottom: 1px solid  #344767  !important;
+   }
+   
+   .rowAccordion {
+     box-shadow: none !important;
+     margin: 0 !important;
+     width: 100% !important;
+   }
+   
+   .rowAccordion::before {
+     display: none !important;
+   }
+   
+   .accordionSummary {
+     font-family: "Poppins", sans-serif !important;
+     padding: 0 !important;
+     min-height: 56px !important;
+     position: relative !important;
+   }
+   
+   .accordionSummary:hover {
+     background-color: #f8fafc;
+   }
+   
+   .accordionSummary > div {
+     margin: 0 !important;
+     padding: 0 !important;
+     width: 100% !important;
+   }
+   
+   /* The expand icon is positioned absolutely to ensure it doesn't affect cell alignment */
+   .accordionSummary > div:nth-child(2) {
+     position: absolute !important;
+     right: 8px !important;
+     top: 50% !important;
+     transform: translateY(-50%) !important;
+   }
+   
+   /* Summary row grid layout - perfectly aligned with headers */
+   .summaryRowGrid {
+     display: grid;
+     grid-template-columns: 16.66% 16.66% 16.66% 16.66% 16.66% calc(16.7% - 40px);
+     width: 100%;
+     align-items: center;
+     padding-right: 0 !important; /* Space for the expand icon */
+   }
+   
+   /* Individual cell styling for alignment control */
+   .summaryOrderId,
+   .summaryConsumer,
+   .summaryValue,
+   .summaryPayment,
+   .summaryStatus,
+   .summaryDate {
+     padding: 10px;
+     font-size: 0.875rem;
+     color: #495057;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+     /* text-align: center; */
+   }
+   
+   /* Status styling */
+   .status-completed, .status-paid {
+     background-color: lightgreen;
+     color: white;
+     border-radius: 4px;
+     padding: 4px 8px;
+     font-weight: 500;
+     width:50%;
+     display: inline-block;
+     text-align: center;
+   }
+   
+   .status-pending {
+     background-color: #db5b20;
+     color: white;
+     border-radius: 4px;
+     padding: 4px 8px;
+     font-weight: 500;
+     width:50%;
+     display: inline-block;
+     text-align: center;
+   }
+   
+   .status-failed, .status-rejected {
+     background-color: #fef2f2;
+     color: #e53e3e;
+     border-radius: 4px;
+     padding: 4px 8px;
+     font-weight: 500;
+     display: inline-block;
+   }
+   
+   /* Details styling */
+   .accordionDetails {
+     padding: 0 16px 16px 16px !important;
+   }
+   
+   .detailsTable {
+     border-radius: 8px;
+     overflow: hidden;
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+     text-transform: capitalize !important;
+   }
+   
+   .detailsHeaderCell {
+     font-family: "Poppins", sans-serif !important;
+     background-color: #edf2f7 !important;
+     padding: 12px 16px !important;
+     font-weight: 600 !important;
+     font-size: 0.8125rem !important;
+     color: #4a5568 !important;
+     text-transform: capitalize !important;
+   }
+   
+   .detailsCell {
+     font-family: "Poppins", sans-serif !important;
+     padding: 12px 16px !important;
+     font-size: 0.8125rem !important;
+     border-bottom: 1px solid #eaecef !important;
+   }
+   .action-btn{
+     font-family: "Poppins", sans-serif !important;
+   }
+   .delete-btn {
+     color: red !important;
+     border: 1px solid red !important;
+   }
+   .action-bar{
+     display: flex;
+     justify-content: start !important;
+     padding:8px 16px 16px 16px!important
+   }

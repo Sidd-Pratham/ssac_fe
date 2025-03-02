@@ -1,0 +1,97 @@
+.form {
+     width: 100%;
+     max-width: 1200px;
+     margin: 0 auto;
+   }
+   .header{
+     display: flex;
+   }
+   .barcodeContainer {
+     text-align: center;
+     margin-bottom: 15px;
+   }
+   
+   .printButton {
+     margin-top: 10px !important;
+   }
+   
+   .currencySymbol {
+     margin-right: 5px;
+   }
+   
+   .readonlyField {
+     background-color: #f8f8f8 !important;
+   }
+   
+   .textarea {
+     width:1145px !important;
+     border-color: #c4c4c4;
+     font-family: inherit;
+     font-size: 1rem;
+     min-height: 100px;
+     height: 75px; /* Approx height for 3 rows */
+     resize: none; /* Prevents resizing */
+     border: 1px solid #ccc;
+     border-radius: 5px;
+     font-family: "Poppins", sans-serif;
+     padding: 16.5px 0 0 14px;
+   }
+   
+   .textarea:focus {
+     border-color: #1976d2;
+     outline: none;
+   }
+   
+   
+   .submitButtonWrapper{
+     display: flex;
+     width: 49%;
+     gap:20px
+   }
+   .submitButton {
+     width: 100%
+    }
+   /* Responsive adjustments */
+   @media (max-width: 600px) {
+     .submitButton {
+       width: 100%;
+     }
+   }
+   
+   /* Form section styles */
+   .formSection {
+     margin-bottom: 24px;
+   }
+   
+   .sectionTitle {
+     margin-bottom: 16px;
+     font-weight: 500;
+     color: #333;
+   }
+   
+   /* Error message styling */
+   .errorText {
+     color: #d32f2f;
+     margin-top: 3px;
+     font-size: 0.75rem;
+   }
+   
+   /* Field label styling */
+   .fieldLabel {
+     font-weight: 500;
+     margin-bottom: 8px;
+     display: block;
+   }
+   
+   /* Required field indicator */
+   .required::after {
+     content: " *";
+     color: #d32f2f;
+   }
+   .barcode-wrapper{
+     padding-top: 25px;
+     height:50% !important
+   }
+   .labels{
+     font-family: "Poppins", sans-serif !important;
+   }
