@@ -3,6 +3,8 @@ import styles from './ProductListing.module.css';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField,MenuItem,Select, TableContainer, TableHead, Table, TableRow, TableCell, TableBody } from '@mui/material';
 import { BASE_URL } from '../../../constants';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 export default function ProductListing() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
@@ -29,6 +31,11 @@ export default function ProductListing() {
     'Other'
   ];
 
+  const [showAlertMessage,setShowAlertMessage] = useState({
+    status:false,
+    type:"",
+    message:""
+  })
   // Fetch products
       const fetchProducts = async () => {
       try {
@@ -68,8 +75,6 @@ export default function ProductListing() {
       }
     };
   useEffect(() => {
-
-    
     fetchProducts();
   }, [searchTerm, selectedVehicleId, selectedCategory]);
 
@@ -147,12 +152,12 @@ export default function ProductListing() {
   };
 
   // Add new product button handler
+
   const handleAddProduct = () => {
     // Navigate to add product page or open modal
     navigate("/products/create");
     };
     async function onProuctDelete(event,id){
-    console.log(id)
     const productId = id;
     if (!window.confirm("Are you sure you want to delete this Product?")) return;
     try {
@@ -166,18 +171,40 @@ export default function ProductListing() {
           }
           const response2 = await fetch(`${BASE_URL}/products`);
           const data2=await response2.json();
-          if (!data.status) {
-            alert(data.message);
+          if (!data2.status) {
+            setShowAlertMessage((prev)=>({
+              ...prev,
+              status:true,
+              type:"error",
+              message:data2.message
+            }));
             setProducts([])
             return;
           }
-          setProducts(data2.data);
-
+          setShowAlertMessage((prev)=>({
+            ...prev,
+            status:true,
+            type:"success",
+            message:"Product deleted successfully"
+          }))
+          fetchProducts();
       } catch (err) {
-         console.error("Error deleting Product:", err);
+        setShowAlertMessage((prev)=>({
+          ...prev,
+          status:true,
+          type:"error",
+          message:err.message
+        }));
       }
     }
+    function handleClose(){
+      setShowAlertMessage((prev)=>({
+        ...prev,
+        status:false
+      }));
+    }
   return (
+    <>
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.heading}>Product Inventory</h1>
@@ -355,5 +382,16 @@ export default function ProductListing() {
       
       
     </div>
+    <Snackbar open={showAlertMessage.status} autoHideDuration={5000} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity={showAlertMessage.type}
+              variant="filled"
+              sx={{ width: '100%' }}
+            >
+           { showAlertMessage.message}
+            </Alert>
+    </Snackbar>
+    </>
   );
 }
