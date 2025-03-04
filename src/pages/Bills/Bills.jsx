@@ -2,9 +2,16 @@ import { useForm,Controller } from "react-hook-form";
 import styles from "./Bills.module.css";
 import { TextField,Select,MenuItem,Button,TableContainer,Table,TableRow,TableCell,TableHead,Paper,TableBody } from "@mui/material";
 import { useRef, useState } from "react";
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import { fetchProduct, paymentMethods,paymentStatus,postBill } from "./Bills";
 export default function Bills(){
      const[sales,setSaleOrders]=useState([]);
+     const [showAlertMessage,setShowAlertMessage] = useState({
+          status:false,
+          type:"",
+          message:""
+        })
      const [totalReceived, setTotalReceived] = useState(sales.reduce((sum, product) => sum + product.total_price, 0));
      const {control,handleSubmit,reset,
            formState: { errors },   
@@ -20,11 +27,17 @@ export default function Bills(){
                     },
                   
           });
+          
      const productCode = useRef(null);
      async function handleFormSubmission(data){
           if(sales.length==0)
           {
-               alert("Please enter at-least one product for bill generation");
+               setShowAlertMessage((prev)=>({
+                    ...prev,
+                    status:true,
+                    type:"error",
+                    message:"Atleast one sale order required for bill generation"
+                  }))
                return;
           }
          const payload={
@@ -37,10 +50,21 @@ export default function Bills(){
          const bill=await postBill(payload);
          console.log(bill)
          if(!bill.status){
-               alert(`OOPS..! An Error Occurred: ${bill.message}`)
+          setShowAlertMessage((prev)=>({
+               ...prev,
+               status:true,
+               type:"error",
+               message:bill.message
+             }))
+             return;
          }else
          {
-               alert("Bill generated Successfully")
+            setShowAlertMessage((prev)=>({
+               ...prev,
+               status:true,
+               type:"success",
+               message:"Bill generated Successfully"
+             }))
                reset({
                     consumer_contact: "",        
                     total_order_value:0,
@@ -67,7 +91,12 @@ export default function Bills(){
           }
           const product_details=await fetchProduct(productCode.current.value);
           if(!product_details.status){
-               alert("Error fetching Product");
+               setShowAlertMessage((prev)=>({
+                    ...prev,
+                    status:true,
+                    type:"error",
+                    message:product_details.message
+                  }))
                return;
           }
           setSaleOrders((prev)=>{
@@ -107,7 +136,14 @@ export default function Bills(){
      function handleReceivedPaymentChange(event){
           setTotalReceived(event.target.value)
      }
-     return <div className={styles['generate-bill-component']}>
+     function handleClose(){
+          setShowAlertMessage((prev)=>({
+            ...prev,
+            status:false
+          }));
+     }
+     return <>
+     <div className={styles['generate-bill-component']}>
           <div className={styles.header}>
                <h1>Create Bill</h1>
           </div>
@@ -267,4 +303,15 @@ export default function Bills(){
          
           </form>
      </div>
+      <Snackbar open={showAlertMessage.status} autoHideDuration={5000} onClose={handleClose}>
+      <Alert
+        onClose={handleClose}
+        severity={showAlertMessage.type}
+        variant="filled"
+        sx={{ width: '100%' }}
+      >
+     { showAlertMessage.message}
+      </Alert>
+      </Snackbar>
+      </>
 }

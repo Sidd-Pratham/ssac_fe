@@ -100,3 +100,8 @@
     margin-bottom: 16px;
   }
 }
+.button-bar{
+  display: flex;
+  flex-direction: column;
+  gap:20px
+}

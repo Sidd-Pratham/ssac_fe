@@ -259,19 +259,19 @@
      color: grey !important ;
      border-color:grey !important;
    }
-   
+/*    
    .editButton:hover {
      background-color: #1976d2;
-   }
+   } */
    
    .deleteButton {
      color: #f44336 !important ;
      border-color:  #f44336 !important;
    }
    
-   .deleteButton:hover {
+   /* .deleteButton:hover {
      background-color: #d32f2f;
-   }
+   } */
    
    .statsSummary {
      display: grid;

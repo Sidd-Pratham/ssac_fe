@@ -25,11 +25,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { BASE_URL } from "../../constants";
 import styles from "./vehicles.module.css";
-
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState([]);
   const [editId, setEditId] = useState(0);
-
+  const [showAlertMessage,setShowAlertMessage] = useState({
+    status:false,
+    type:"",
+    message:""
+  })
   function handleSearchChange(event) {
     fetchData(event.target.value);
   }
@@ -63,12 +68,17 @@ export default function Vehicles() {
       const data = await response.json();
       setVehicles(data.data);
     } catch (error) {
-      console.error("Failed to fetch data:", error);
+      setShowAlertMessage((prev)=>({
+        ...prev,
+        status:true,
+        type:"error",
+        message:error.message
+      }));
     }
   };
 
   const postData = async (postdata) => {
-    try {
+      try {
       const response = await fetch(`${BASE_URL}/vehicle`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -77,20 +87,28 @@ export default function Vehicles() {
       const data = await response.json();
       if(!data.status)
         {
-          alert(data.message)
+          setShowAlertMessage((prev)=>({
+            ...prev,
+            status:true,
+            type:"error",
+            message:data.message
+          }))
         }
         else
         {
-          reset();
-          console.log("Created Vehicle:", data);
+          reset({name: "",brand_name: ""});
+          setShowAlertMessage((prev)=>({
+            ...prev,
+            status:true,
+            type:"success",
+            message:"Vehicle created successfully"
+          }))
           fetchData();
         }
-
     } catch (error) {
       console.error("Error creating Vehicle:", error);
     }
   };
-
   const updateData = async (updateData) => {
     try {
       const response = await fetch(`${BASE_URL}/vehicle/${editId}`, {
@@ -101,7 +119,12 @@ export default function Vehicles() {
       const data = await response.json();
       if(!data.status)
       {
-        alert(data.message)
+        setShowAlertMessage((prev)=>({
+          ...prev,
+          status:true,
+          type:"error",
+          message:data.message
+        }))
       }
       else
       {
@@ -110,6 +133,12 @@ export default function Vehicles() {
           name: "",
           brand_name: "",
         });
+        setShowAlertMessage((prev)=>({
+          ...prev,
+          status:true,
+          type:"success",
+          message:"Vehicle Updated Successfully"
+        }))
         setEditId(0); // Reset edit mode
       }
     
@@ -127,25 +156,59 @@ export default function Vehicles() {
       const data = await response.json();
       if(!data.status)
       {
-        alert(data.message)
+        setShowAlertMessage((prev)=>({
+          ...prev,
+          status:true,
+          type:"error",
+          message:data.message
+        }))
       }
-      console.log("Vehicle deleted successfully");
-      fetchData(); // Refresh the data after deletion
+      else
+      {
+        setShowAlertMessage((prev)=>
+          ({
+          ...prev,
+          status:true,
+          type:"success",
+          message:"Vehicle Deleted Successfully"
+        }))
+        if (vehicleId == editId) {
+          reset({
+            name: "",
+            brand_name:""
+          });
+        }
+        fetchData(); 
+      }
     } catch (err) {
-      alert(err.message);
-      console.error("Error deleting vehicle:", err);
+      setShowAlertMessage({
+        status:true,
+        type:"error",
+        message:err.message
+      })
     }
   };
 
+  function handleCancel(){
+    reset({
+      name: "",
+      brand_name: "",
+    });
+    setEditId(0); // Reset edit mode
+  }
   function handleFormSubmission(data) {
-    console.log(data);
     if (editId != 0) {
       updateData(data);
     } else {
       postData(data);
     }
   }
-
+  function handleClose(){
+    setShowAlertMessage((prev)=>({
+      ...prev,
+      status:false
+    }));
+  }
   const {
     register,
     handleSubmit,
@@ -154,6 +217,7 @@ export default function Vehicles() {
   } = useForm();
 
   return (
+    <>
     <div className={styles.vehiclesContainer}>
       <Grid container spacing={3}>
         {/* Vehicle List Section */}
@@ -281,7 +345,7 @@ export default function Vehicles() {
                     })}
                   />
                 </div>
-                
+                <div className={styles["button-bar"]}>
                 <Button
                   type="submit"
                   variant="contained"
@@ -292,11 +356,26 @@ export default function Vehicles() {
                 >
                   {editId ? "Update" : "Add"} Vehicle
                 </Button>
+                <Button variant="outlined" type="button" fullWidth onClick={handleCancel}>Cancel</Button>
+                </div>
+                
               </form>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
     </div>
+
+    <Snackbar open={showAlertMessage.status} autoHideDuration={5000} onClose={handleClose}>
+    <Alert
+      onClose={handleClose}
+      severity={showAlertMessage.type}
+      variant="filled"
+      sx={{ width: '100%' }}
+    >
+   { showAlertMessage.message}
+    </Alert>
+    </Snackbar>
+    </>
   );
 }

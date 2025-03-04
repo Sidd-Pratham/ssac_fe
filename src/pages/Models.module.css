@@ -7,7 +7,7 @@
 .card {
   border-radius: 8px !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-  height: 100%;
+  /* height: 100%; */
   overflow: hidden;
 }
 
@@ -46,6 +46,7 @@
 /* Table Styling */
 .tableContainer {
   padding: 0 !important;
+  height: fit-content !important;
 }
 
 .tableHeader {
@@ -69,6 +70,8 @@
 /* Form Styling */
 .form {
   padding: 16px 0;
+  display: flex !important;
+  gap:0px !important;
 }
 
 .formField {

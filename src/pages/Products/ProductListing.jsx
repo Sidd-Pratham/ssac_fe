@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styles from './ProductListing.module.css';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField,MenuItem,Select, TableContainer, TableHead, Table, TableRow, TableCell, TableBody } from '@mui/material';
+import { BASE_URL } from '../../../constants';
 export default function ProductListing() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
@@ -29,8 +30,7 @@ export default function ProductListing() {
   ];
 
   // Fetch products
-  useEffect(() => {
-    const fetchProducts = async () => {
+      const fetchProducts = async () => {
       try {
         setLoading(true);
         
@@ -67,6 +67,8 @@ export default function ProductListing() {
         setLoading(false);
       }
     };
+  useEffect(() => {
+
     
     fetchProducts();
   }, [searchTerm, selectedVehicleId, selectedCategory]);
@@ -128,14 +130,14 @@ export default function ProductListing() {
   });
 
   // Format date
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB', { 
-      year: 'numeric', 
-      month: 'numeric', 
-      day: 'numeric' 
-    });
-  };
+  // const formatDate = (dateString) => {
+  //   const date = new Date(dateString);
+  //   return date.toLocaleDateString('en-GB', { 
+  //     year: 'numeric', 
+  //     month: 'numeric', 
+  //     day: 'numeric' 
+  //   });
+  // };
 
   // Function to determine stock status class
   const getStockStatusClass = (quantity) => {
@@ -149,7 +151,32 @@ export default function ProductListing() {
     // Navigate to add product page or open modal
     navigate("/products/create");
     };
+    async function onProuctDelete(event,id){
+    console.log(id)
+    const productId = id;
+    if (!window.confirm("Are you sure you want to delete this Product?")) return;
+    try {
+          const response = await fetch(`${BASE_URL}/products/${productId}`, {
+            method: "DELETE",
+          });
+          const data=await response.json();
+          if (!data.status) {
+          alert(data.message);
+          return;
+          }
+          const response2 = await fetch(`${BASE_URL}/products`);
+          const data2=await response2.json();
+          if (!data.status) {
+            alert(data.message);
+            setProducts([])
+            return;
+          }
+          setProducts(data2.data);
 
+      } catch (err) {
+         console.error("Error deleting Product:", err);
+      }
+    }
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -259,6 +286,11 @@ export default function ProductListing() {
                     <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
                   )}
                 </TableCell>
+                <TableCell onClick={() => requestSort('manufacturer_name')}>
+                Manufacturer Name {sortConfig.key === 'manufacturer_name' && (
+                    <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
+                  )}
+                </TableCell>
                 <TableCell onClick={() => requestSort('category')}>
                   Category {sortConfig.key === 'category' && (
                     <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
@@ -279,11 +311,7 @@ export default function ProductListing() {
                     <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
                   )}
                 </TableCell>
-                <TableCell onClick={() => requestSort('updatedAt')}>
-                  Last Updated {sortConfig.key === 'updatedAt' && (
-                    <span>{sortConfig.direction === 'ascending' ? '▲' : '▼'}</span>
-                  )}
-                </TableCell>
+                
                 <th>Actions</th>
               </TableRow>
             </TableHead>
@@ -293,6 +321,7 @@ export default function ProductListing() {
                   <TableRow key={product.id}>
                     <TableCell>{product.name}</TableCell>
                     <TableCell>{product.product_code}</TableCell>
+                    <TableCell>{product.manufacturer_name}</TableCell>
                     <TableCell>
                          <span className={`${styles.categoryBadge} ${styles[`badge-${product.category}`]}`}>
                          {product.category}
@@ -303,11 +332,13 @@ export default function ProductListing() {
                     </TableCell>
                     <TableCell>₹{product.selling_price.toLocaleString()}</TableCell>
                     <TableCell>₹{product.profit.toLocaleString()}</TableCell>
-                    <TableCell>{formatDate(product.updatedAt)}</TableCell>
+                 
+
+                    {/* <TableCell>{formatDate(product.updatedAt)}</TableCell> */}
                     <TableCell>
                       <div className={styles.actionButtons}>
                         <Button variant="outlined" className={styles.editButton}>EDIT</Button>
-                        <Button variant="outlined"className={styles.deleteButton}>DELETE</Button>
+                        <Button variant="outlined"className={styles.deleteButton} onClick={(event)=>onProuctDelete(event,product.id)}>DELETE</Button>
                       </div>
                     </TableCell>
                   </TableRow>

@@ -30,6 +30,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 // import FilterListIcon from "@mui/icons-material/FilterList";
 import { BASE_URL } from "../../constants";
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import styles from "./models.module.css";
 
 export default function Models() {
@@ -40,7 +42,11 @@ export default function Models() {
     vehicle_id: "",
   });
   const [editId, setEditId] = useState(0);
-
+  const [showAlertMessage,setShowAlertMessage] = useState({
+    status:false,
+    type:"",
+    message:""
+  })
   useEffect(() => {
     fetchData();
     return () => {
@@ -79,9 +85,20 @@ export default function Models() {
     const modelId = model.id;
     if (!window.confirm("Are you sure you want to delete this Model?")) return;
     try {
-      await fetch(`${BASE_URL}/vehicle_models/${modelId}`, {
+      const response= await fetch(`${BASE_URL}/vehicle_models/${modelId}`, {
         method: "DELETE",
       });
+      const data= await response.json();
+      if(!data.status)
+      {
+          setShowAlertMessage((prev)=>({
+            ...prev,
+            status:true,
+            type:"error",
+            message:data.message
+      }));
+          return;
+        }
       console.log("Model deleted successfully");
       if (modelId == editId) {
         reset({
@@ -90,6 +107,12 @@ export default function Models() {
           vehicle_id: "",
         });
       }
+      setShowAlertMessage((prev)=>({
+        ...prev,
+        status:true,
+        type:"success",
+        message:"Model deleted Successfully"
+      }));
       await fetchData(); // Refresh the data after deletion
     } catch (err) {
       console.error("Error deleting Model:", err);
@@ -101,8 +124,13 @@ export default function Models() {
       const response = await fetch(`${BASE_URL}/vehicle`);
       const data = await response.json();
       setVehicles(data.data);
-    } catch (err) {
-      console.error("Failed to fetch data:", err);
+    } catch (error) {
+      setShowAlertMessage((prev)=>({
+        ...prev,
+        status:true,
+        type:"error",
+        message:error.message
+      }));
     }
   }
 
@@ -116,8 +144,13 @@ export default function Models() {
       );
       const data = await response.json();
       setModels(data.data);
-    } catch (err) {
-      console.error("Failed to fetch data:", err);
+    } catch (error) {
+      setShowAlertMessage((prev)=>({
+        ...prev,
+        status:true,
+        type:"error",
+        message:error.message
+      }));
     }
   }
 
@@ -129,7 +162,12 @@ export default function Models() {
       postData(data);
     }
   }
-
+  function handleClose(){
+    setShowAlertMessage((prev)=>({
+      ...prev,
+      status:false
+    }));
+  }
   async function updateData(updateData) {
     try {
       const response = await fetch(`${BASE_URL}/vehicle_models/${editId}`, {
@@ -137,7 +175,17 @@ export default function Models() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updateData),
       });
-      await response.json();
+      const data=await response.json();
+      if(!data.status)
+      {
+        setShowAlertMessage((prev)=>({
+          ...prev,
+          status:true,
+          type:"error",
+          message:data.message
+        }));
+        return;
+      }
       await fetchData();
       reset({
         name: "",
@@ -145,8 +193,19 @@ export default function Models() {
         vehicle_id: "",
       });
       setEditId(0); // Reset edit mode
+      setShowAlertMessage((prev)=>({
+        ...prev,
+        status:true,
+        type:"success",
+        message:"Model updated successfully"
+      }))
     } catch (error) {
-      console.error("Error updating Vehicle:", error);
+      setShowAlertMessage((prev)=>({
+        ...prev,
+        status:true,
+        type:"success",
+        message:error.message
+      }))
     }
   }
 
@@ -157,15 +216,41 @@ export default function Models() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(postdata),
       });
-      const data = await response.json();
+      const data= await response.json();
+      if(!data.status)
+        {
+          setShowAlertMessage((prev)=>({
+            ...prev,
+            status:true,
+            type:"error",
+            message:data.message
+          }));
+          return;
+        }
       reset();
-      console.log("Created Model:", data);
+      setShowAlertMessage((prev)=>({
+        ...prev,
+        status:true,
+        type:"success",
+        message:"Model created successfully"
+      }))
       fetchData();
     } catch (error) {
-      console.error("Error creating Model:", error);
+      setShowAlertMessage((prev)=>({
+        ...prev,
+        status:true,
+        type:"error",
+        message:error.message
+      }))
     }
   }
-
+  function handleCancel(){
+    reset({
+      name: "",
+      year: "",
+      vehicle_id: "",
+    });
+  }
   const {
     control,
     handleSubmit,
@@ -180,6 +265,7 @@ export default function Models() {
   });
 
   return (
+    <>
     <div className={styles.modelsContainer}>
       <Grid container spacing={3}>
         {/* Models List Section */}
@@ -321,13 +407,11 @@ export default function Models() {
                         variant="outlined"
                         error={!!errors.vehicle_id}
                       >
-                        <InputLabel id="vehicle-select-label">
-                          Vehicle
-                        </InputLabel>
+                       <label htmlFor="vehicle_id">Vehicle:</label>
                         <Select
                           {...field}
+                          displayEmpty
                           labelId="vehicle-select-label"
-                          label="Vehicle"
                         >
                           <MenuItem value="">
                             <em>Select Vehicle</em>
@@ -349,6 +433,7 @@ export default function Models() {
                 </div>
 
                 <div className={styles.formField}>
+                <label htmlFor="name">Model name:</label>
                   <Controller
                     name="name"
                     control={control}
@@ -357,7 +442,7 @@ export default function Models() {
                       <TextField
                         {...field}
                         fullWidth
-                        label="Model Name"
+                        placeholder="Enter model name"
                         variant="outlined"
                         error={!!errors.name}
                         helperText={errors.name?.message}
@@ -367,6 +452,7 @@ export default function Models() {
                 </div>
 
                 <div className={styles.formField}>
+                  <label htmlFor="year">Year:</label>
                   <Controller
                     name="year"
                     control={control}
@@ -381,7 +467,7 @@ export default function Models() {
                       <TextField
                         {...field}
                         fullWidth
-                        label="Year"
+                        placeholder="Enter year"
                         variant="outlined"
                         type="number"
                         error={!!errors.year}
@@ -390,7 +476,7 @@ export default function Models() {
                     )}
                   />
                 </div>
-
+                <div>
                 <Button
                   type="submit"
                   variant="contained"
@@ -401,11 +487,33 @@ export default function Models() {
                 >
                   {editId ? "Update" : "Add"} Model
                 </Button>
+                <Button
+                  type="button"
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  onClick={handleCancel}
+                  className={styles.submitButton}
+                >
+                  Cancel
+                </Button>
+                </div>
               </form>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
     </div>
+    <Snackbar open={showAlertMessage.status} autoHideDuration={5000} onClose={handleClose}>
+        <Alert
+          onClose={handleClose}
+          severity={showAlertMessage.type}
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+       { showAlertMessage.message}
+        </Alert>
+        </Snackbar>
+        </>
   );
 }
