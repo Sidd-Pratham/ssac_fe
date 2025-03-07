@@ -262,7 +262,8 @@
 /*    
    .editButton:hover {
      background-color: #1976d2;
-   } */
+     color: white !important;
+   }
    
    .deleteButton {
      color: #f44336 !important ;
@@ -271,7 +272,8 @@
    
    /* .deleteButton:hover {
      background-color: #d32f2f;
-   } */
+     color: white !important;
+   }
    
    .statsSummary {
      display: grid;

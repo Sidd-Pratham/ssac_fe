@@ -7,12 +7,13 @@ import { DirectionsCar, Category, Inventory, Receipt } from "@mui/icons-material
 import "./App.css";
 
 // Import your pages
-import Vehicles from "./pages/Vehicles.jsx";
+import Vehicles from "./pages/vehicles.jsx";
 import Models from "./pages/Models.jsx";
 import Products from "./pages/Products/Products.jsx";
 import Bills from "./pages/Bills/Bills.jsx";
 import ListBills from "./pages/Bills/listBills.jsx";
 import ProductListing from "./pages/Products/ProductListing.jsx";
+import EditProduct from "./pages/Products/EditProduct.jsx";
 
 // Custom NavTabs component
 const NavTabs = () => {
@@ -110,6 +111,7 @@ function AppContent() {
           <Route path="/bills" element={<ListBills />} />
           <Route path="/bills/create" element={<Bills />} />
           <Route path="/products/create" element={<Products />} />
+          <Route path="/products/:id/edit" element={<EditProduct />} />
           <Route path="/" element={<Navigate replace to="/products" />} />
         </Routes>
       </Container>
