@@ -14,7 +14,7 @@ import Bills from "./pages/Bills/Bills.jsx";
 import ListBills from "./pages/Bills/listBills.jsx";
 import ProductListing from "./pages/Products/ProductListing.jsx";
 import EditProduct from "./pages/Products/EditProduct.jsx";
-
+import EditBills from "./pages/Bills/EditBills.jsx";
 // Custom NavTabs component
 const NavTabs = () => {
   const location = useLocation();
@@ -112,6 +112,7 @@ function AppContent() {
           <Route path="/bills/create" element={<Bills />} />
           <Route path="/products/create" element={<Products />} />
           <Route path="/products/:id/edit" element={<EditProduct />} />
+          <Route path="/bills/:id/edit" element={<EditBills />} />
           <Route path="/" element={<Navigate replace to="/products" />} />
         </Routes>
       </Container>

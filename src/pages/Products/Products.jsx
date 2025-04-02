@@ -239,6 +239,10 @@ export default function Products(){
                   text-align: center;
                   width: 100%;
                 }
+                #barcode-container p{
+                padding:0,
+                margin:0
+                }
               </style>
             `;
           
@@ -349,6 +353,8 @@ export default function Products(){
                 <div className={styles['barcode-wrapper']}>
                     <div id="barcode-container" className={styles.barcodeContainer}>
                       <svg ref={barcodeRef}></svg>
+                      <p>{`MRP:${getValues("product_mrp")}`}</p>
+                      <p>{`${getValues("name")} ${getValues("manufacturer_name")}`}</p>
                     </div>
                     <Button type="button" onClick={handlePrint} variant="contained"fullWidth>Print BarCode</Button>
                 </div>
