@@ -1,0 +1,29 @@
+.header{
+     display:flex;
+}
+.barcode-wrapper{
+     background-color: white;
+     padding-top: 12px;
+     height: 100%;
+     display: flex;
+     justify-content:center;
+     align-items: center;
+}
+.bar-code-replacement-wrapper{
+     height: 100%;
+     background-color: white;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+}
+.bar-code-text-box{
+     font-weight:400;
+     font-size:11px;
+}
+.currencySymbol {
+     margin-right: 5px;
+   }
+.textarea{
+     resize: none;
+     width:1200px !important
+}
