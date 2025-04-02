@@ -259,7 +259,7 @@
      color: grey !important ;
      border-color:grey !important;
    }
-/*    
+  
    .editButton:hover {
      background-color: #1976d2;
      color: white !important;
@@ -270,7 +270,7 @@
      border-color:  #f44336 !important;
    }
    
-   /* .deleteButton:hover {
+  .deleteButton:hover {
      background-color: #d32f2f;
      color: white !important;
    }
@@ -314,7 +314,7 @@
        flex-direction: column;
        align-items: flex-start;
        gap: 15px;
-     }
+       }
      
      .addButton {
        width: 100%;

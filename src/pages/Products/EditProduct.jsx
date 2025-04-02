@@ -9,6 +9,8 @@ import { useEffect, useRef, useState } from "react";
 import JsBarcode from "jsbarcode";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { useMutation } from '@tanstack/react-query';
+
 
 
 export default function EditProduct(){
@@ -36,7 +38,7 @@ export default function EditProduct(){
            formState: { errors },   
           } = useForm({
                     defaultValues: {
-                         name: "",        
+                         name: "",
                          product_code: "",
                          quantity:0,
                          category:"",
@@ -117,8 +119,7 @@ export default function EditProduct(){
                               }
                           })
                      }
-                },
-               
+               },
            });
           const { data:vehicleData } = useQuery({
                queryKey: ['vehicleData'],
@@ -136,6 +137,7 @@ export default function EditProduct(){
                    return apiResponse.data;
                },
            });
+          
           // useEffect(() => {
           //      if (productData) {
                   
@@ -199,7 +201,21 @@ export default function EditProduct(){
                     setSelectedModels(newSelectedModels);
                   }
           }
-
+          const postProduct = async (productData) => {
+               const response = await fetch(`${BASE_URL}/products/${id}`, {
+                   method: 'PATCH',
+                   headers: {
+                       'Content-Type': 'application/json',
+                   },
+                   body: JSON.stringify(productData),
+               });
+           
+               if (!response.ok) {
+                   throw new Error(`Error ${response.status}: ${response.statusText}`);
+               }
+           
+               return response.json(); // Return API response
+           };
           function handleModelChange(event)
           {
                const {
@@ -210,16 +226,46 @@ export default function EditProduct(){
                     typeof value === 'string' ? value.split(',') : value,
                   );
           }    
-
+          const { mutate} = useMutation({
+               mutationFn: postProduct,
+               onSuccess: (data) => {
+                    setShowAlertMessage((prev)=>{
+                         return{
+                              ...prev,
+                              status:true,
+                              type:"success",
+                              message:"Product edited successfully"
+                         }
+                     })
+               },
+               onError: (error) => {
+                    setShowAlertMessage((prev)=>{
+                         return{
+                              ...prev,
+                              status:true,
+                              type:"error",
+                              message:error.message
+                         }
+                     })
+               }
+           });
           function handleFormSubmission(data){
-               // event.preventDefault();
-               console.log(event);
                const productData = {
-                   name: event.target.name.value,
-                   price: event.target.price.value,
+                   name: data.name,
+                   product_code:data.product_code,
+                   price:data.price,
+                   quantity:data.quantity,
+                   category:data.category,
+                   manufacturer_name:data.manufacturer_name,
+                   avg_cost_price:data.avg_cost_price,
+                   selling_price:data.selling_price,
+                   product_mrp:data.product_mrp,
+                   description:data.description,
+                   profit:data.profit,
+                   associated_vehicles:JSON.stringify(selectedVehicles),
+                   associated_models:JSON.stringify(selectedModels)
                };
-           
-               // mutate(productData);
+               mutate(productData);
           }
 
           function handleClose(){
