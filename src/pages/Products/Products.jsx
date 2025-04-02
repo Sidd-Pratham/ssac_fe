@@ -8,10 +8,11 @@ import { BASE_URL } from "../../../constants";
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import {Typography,FormHelperText,Paper,Grid,} from "@mui/material";
+import { product_categories } from "../../../constants";
 export default function Products(){
      
-     const {control,handleSubmit,reset,setValue,watch,
-           formState: { errors },
+     const {control,handleSubmit,reset,setValue,watch,getValues,
+           formState: { errors },   
           } = useForm({
                     defaultValues: {
                          name: "",        
@@ -28,7 +29,7 @@ export default function Products(){
                     }
           });
           const barcodeRef = useRef(null);
-          const categories=['Engine','Suspension','Braking','Electricals','Exhaust','Body','Accessories','Other']
+          const categories=product_categories;
           const [barcodeValue, setBarcodeValue] = useState("");
           const [vehicles, setVehicles] = useState([]);
           const [selectedVehicles, setSelectedVehicles] = useState([]);
@@ -212,15 +213,55 @@ export default function Products(){
               status:false
             }));
           }
-          //    const handlePrint = () => {
-          //      const printContent = document.getElementById("barcode-container");
-          //      const windowPrint = window.open("", "", "width=600,height=400");
-          //      windowPrint.document.write(printContent.innerHTML);
-          //      windowPrint.document.close();
-          //      windowPrint.focus();
-          //      windowPrint.print();
-          //      windowPrint.close();
-          //    };
+          const handlePrint = () => {
+            const printContent = document.getElementById("barcode-container");
+            
+            // Open new print window
+            const windowPrint = window.open("", "", "width=100%,height=100%");
+          
+            // Define label print styles
+            const printStyles = `
+              <style>
+              @page {
+                  margin: 0;
+                }
+                body {
+                  padding-top:0
+                  margin-top:0
+                  margin-left:2px;
+                  display: flex;
+                  flex-direction:column;
+                  justify-content: center;
+                  align-items: center;
+   
+                }
+                #barcode-container {
+                  text-align: center;
+                  width: 100%;
+                }
+                #barcode-container p{
+                padding:0,
+                margin:0
+                }
+              </style>
+            `;
+          
+            // Write content and styles to the print window
+            windowPrint.document.write(`
+              <html>
+                <head>${printStyles}</head>
+                <body>
+                  ${printContent.innerHTML}
+                </body>
+              </html>
+            `);
+            
+            windowPrint.document.close();
+            windowPrint.focus();
+            windowPrint.print();
+            windowPrint.close();
+          };
+          
      return <>
       <div>
         <h1 className={styles.header}>
@@ -312,7 +353,10 @@ export default function Products(){
                 <div className={styles['barcode-wrapper']}>
                     <div id="barcode-container" className={styles.barcodeContainer}>
                       <svg ref={barcodeRef}></svg>
+                      <p>{`MRP:${getValues("product_mrp")}`}</p>
+                      <p>{`${getValues("name")} ${getValues("manufacturer_name")}`}</p>
                     </div>
+                    <Button type="button" onClick={handlePrint} variant="contained"fullWidth>Print BarCode</Button>
                 </div>
               ) : (
                 <Paper variant="outlined" sx={{ height: '60%', display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2, my:3, backgroundColor: '#f9f9f9' }}>

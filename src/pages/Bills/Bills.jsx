@@ -48,7 +48,6 @@ export default function Bills(){
           sale_orders_details:sales
          };
          const bill=await postBill(payload);
-         console.log(bill)
          if(!bill.status){
           setShowAlertMessage((prev)=>({
                ...prev,
